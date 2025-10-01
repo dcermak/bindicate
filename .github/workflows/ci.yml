@@ -1,0 +1,31 @@
+---
+name: CI
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: set up go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+
+      - name: build
+        run: go build -o bindicate bin/bindicate.go
+        working-directory: .
+
+      - name: unit tests
+        run: go test -v ./...
+        working-directory: .
+
+      - name: mount tests
+        run: sudo go test -v ./...
+        working-directory: .
