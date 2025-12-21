@@ -156,7 +156,7 @@ func LoadConfig(configPath string) (*Bindicate, error) {
 }
 
 func main() {
-	var confPath []string
+	var confPath string
 
 	var bindicate *Bindicate
 
@@ -165,19 +165,17 @@ func main() {
 		Usage: "Setup bind mounts from / into a prefix",
 		Before: func(ctx context.Context, c *cli.Command) (context.Context, error) {
 			var err error
-			if len(confPath[0]) == 0 {
-				confPath[0] = "/var/lib/bindicate/config.json"
+			if len(confPath) == 0 {
+				confPath = "/var/lib/bindicate/config.json"
 			}
-			bindicate, err = LoadConfig(confPath[0])
+			bindicate, err = LoadConfig(confPath)
 
 			return ctx, err
 		},
 		Arguments: []cli.Argument{
 			&cli.StringArg{
-				Name:   "conf-file",
-				Min:    0,
-				Max:    1,
-				Values: &confPath,
+				Name:        "--conf-file",
+				Destination: &confPath,
 			},
 		},
 		Commands: []*cli.Command{
